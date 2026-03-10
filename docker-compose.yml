@@ -12,8 +12,8 @@ services:
     volumes:
       # Project code (live mount)
       - .:/workspace/FSAD
-      # Data directory (adjust path per server)
-      - ${DATA_PATH:-/data}:/workspace/data
+      # Volume directory
+      - ./Volume:/workspace
       # Cache for pretrained models (torch.hub, timm, HF)
       - ${CACHE_PATH:-~/.cache}:/root/.cache
     shm_size: "16g"
