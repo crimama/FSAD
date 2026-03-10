@@ -77,4 +77,4 @@ echo "  docker compose run --rm fsad python main.py --config configs/default.yam
 echo ""
 echo "  # Background container"
 echo "  docker compose up -d"
-echo "  docker exec -it hun_im_fsad bash"
+echo "  docker exec -it hun_FSAD bash"
