@@ -1,0 +1,27 @@
+DATASET:
+  name: MVTec
+  data_root: ../MVTecAD
+  category: null
+  shot: 1
+
+MODEL:
+  model_name: dinov2_vits14
+  resolution: 448
+
+RUN:
+  shots: [1]
+  num_seeds: 1
+  just_seed: null
+  preprocess: agnostic
+  knn_metric: L2_normalized
+  k_neighbors: 1
+  faiss_on_cpu: true
+  mask_ref_images: false
+  save_examples: true
+  eval_clf: true
+  eval_segm: false
+  warmup_iters: 25
+  tag: null
+
+SYSTEM:
+  device: cuda:0
