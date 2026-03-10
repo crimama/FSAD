@@ -1,0 +1,20 @@
+category: bottle
+data_root: /workspace/MVTecAD
+dataset: MVTec
+device: cpu
+eval_clf: false
+eval_segm: false
+faiss_on_cpu: true
+just_seed: null
+k_neighbors: 1
+knn_metric: L2_normalized
+mask_ref_images: false
+model_name: dinov2_vits14
+num_seeds: 1
+preprocess: agnostic
+resolution: 448
+save_examples: false
+shots:
+- 1
+tag: null
+warmup_iters: 0
