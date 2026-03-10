@@ -1,10 +1,13 @@
+import logging
 import os
+import time
 from argparse import ArgumentParser
 
 from omegaconf import OmegaConf
 
 from run_anomalydino import parse_args as parse_baseline_args
 from run_anomalydino import run as run_fewshot
+from src.logging_utils import make_log_dir, save_metadata, save_summary, setup_logging
 
 
 def parse_args():
@@ -42,6 +45,21 @@ def build_fewshot_args(cfg):
     return argv
 
 
+def resolve_results_dir(cfg):
+    """Predict the results directory that run_anomalydino will create."""
+    run_cfg = cfg.RUN
+    shots = run_cfg.shots if run_cfg.shots else [cfg.DATASET.shot]
+    shot = shots[0]
+    results_dir = (
+        f"results_{cfg.DATASET.name}/"
+        f"{cfg.MODEL.model_name}_{cfg.MODEL.resolution}/"
+        f"{shot}-shot_preprocess={run_cfg.preprocess}"
+    )
+    if run_cfg.tag:
+        results_dir += "_" + run_cfg.tag
+    return results_dir
+
+
 def main():
     args = parse_args()
     cfg = load_config(args.config, args.overrides)
@@ -54,6 +72,32 @@ def main():
         )
     cfg.DATASET.data_root = data_root
 
+    # --- Logging setup ---
+    log_cfg = cfg.get("LOG", {})
+    log_base = OmegaConf.select(cfg, "LOG.dir", default="logs")
+    log_tag = cfg.RUN.tag or None
+    log_dir = make_log_dir(base_dir=log_base, tag=log_tag)
+    setup_logging(log_dir)
+
+    logger = logging.getLogger(__name__)
+    logger.info("Log directory: %s", os.path.abspath(log_dir))
+
+    # Save resolved config to log dir
+    cfg_path = os.path.join(log_dir, "config.yaml")
+    OmegaConf.save(cfg, cfg_path, resolve=True)
+    logger.info("Saved resolved config to %s", cfg_path)
+
+    results_dir = resolve_results_dir(cfg)
+    save_metadata(
+        log_dir,
+        OmegaConf.to_container(cfg, resolve=True),
+        extra={"results_dir": results_dir},
+    )
+
+    # Print config (also captured by logging)
+    logger.info("Loaded config:\n%s", OmegaConf.to_yaml(cfg, resolve=True))
+
+    # --- Build args and run ---
     argv = build_fewshot_args(cfg)
     if cfg.RUN.faiss_on_cpu:
         argv.append("--faiss_on_cpu")
@@ -70,9 +114,30 @@ def main():
     if cfg.RUN.tag:
         argv.extend(["--tag", cfg.RUN.tag])
 
-    print("Loaded config:")
-    print(OmegaConf.to_yaml(cfg, resolve=True))
+    start_time = time.time()
+
     run_fewshot(parse_baseline_args(argv))
+
+    elapsed = time.time() - start_time
+    logger.info("Total experiment time: %.1f seconds (%.1f min)", elapsed, elapsed / 60)
+
+    # --- Post-run: save summary for each seed ---
+    run_cfg = cfg.RUN
+    seeds = [run_cfg.just_seed] if run_cfg.just_seed is not None else list(range(run_cfg.num_seeds))
+    for seed in seeds:
+        save_summary(log_dir, results_dir, seed=seed)
+
+    # Update metadata with duration
+    save_metadata(
+        log_dir,
+        OmegaConf.to_container(cfg, resolve=True),
+        extra={
+            "results_dir": results_dir,
+            "duration_seconds": round(elapsed, 1),
+        },
+    )
+
+    logger.info("All logs saved to: %s", os.path.abspath(log_dir))
 
 
 if __name__ == "__main__":

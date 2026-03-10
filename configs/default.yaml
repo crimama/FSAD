@@ -23,5 +23,8 @@ RUN:
   warmup_iters: 25
   tag: null
 
+LOG:
+  dir: logs
+
 SYSTEM:
   device: cuda:0

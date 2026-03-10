@@ -1,4 +1,32 @@
 masking:
   bottle: false
+  cable: false
+  capsule: true
+  carpet: false
+  grid: false
+  hazelnut: true
+  leather: false
+  metal_nut: false
+  pill: true
+  screw: true
+  tile: false
+  toothbrush: true
+  transistor: false
+  wood: false
+  zipper: false
 rotation:
   bottle: true
+  cable: true
+  capsule: true
+  carpet: true
+  grid: true
+  hazelnut: true
+  leather: true
+  metal_nut: true
+  pill: true
+  screw: true
+  tile: true
+  toothbrush: true
+  transistor: true
+  wood: true
+  zipper: true

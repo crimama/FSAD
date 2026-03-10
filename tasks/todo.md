@@ -1,25 +1,33 @@
 # TODO
 
 ## 현재 작업
-로컬 MVTec AD 데이터셋(`../MVTecAD`) 기준으로 단일 카테고리 실행 검증이 가능하도록 카테고리 필터를 메인 파이프라인에 연결
+MVTec AD baseline 실험 실행 + 로깅 시스템 구축
 
 ## 계획
-- [x] 현재 엔트리포인트와 데이터 경로 전달 구조 확인
-- [x] 설정/CLI에 카테고리 필터 추가
-- [x] 선택된 카테고리만 처리하도록 실행 경로 제한
-- [x] README와 기본 설정에 검증용 사용 예시 반영
-- [x] 단일 카테고리 기준 최소 실행 검증 후 결과 기록
+- [x] 환경 확인 (GPU, 데이터셋, 의존성)
+- [x] 전체 카테고리 1-shot baseline 실행 (eval_clf + eval_segm)
+- [x] 로깅 시스템 구현 (`src/logging_utils.py`)
+- [x] `main.py`에 로깅 통합
+- [x] 로깅 시스템 검증
+- [ ] (선택) `run_anomalydino.py`의 print()를 logging으로 점진적 전환
 
 ## 결과
-- 완료:
-  - `configs/default.yaml`에 `DATASET.category: null`을 추가해 단일 카테고리 제한을 설정 파일에서 제어 가능하게 함
-  - `main.py`가 `DATASET.category`를 `run_anomalydino.py`의 `--category` 인자로 전달하도록 연결
-  - `run_anomalydino.py`, `run_anomalydino_batched.py`에 `--category` 옵션과 카테고리 유효성 검증을 추가
-  - `src/utils.py`에 공통 카테고리 필터 유틸리티를 추가해 선택된 카테고리만 처리하도록 제한
-  - `README.md`에 단일 카테고리 검증용 실행 예시를 추가
-- 검증:
-  - `python -m compileall main.py run_anomalydino.py run_anomalydino_batched.py src` 통과
-  - `python - <<'PY' ...` 스니펫으로 `DATASET.category=bottle` 설정 시 `--category bottle` 인자 전파, `/workspace/MVTecAD` 존재, `bottle/train/good` 존재를 확인
-  - `timeout 30s python main.py --config configs/default.yaml DATASET.category=bottle RUN.warmup_iters=0 RUN.save_examples=false RUN.eval_clf=false RUN.eval_segm=false SYSTEM.device=cpu` 실행으로 실제 DINOv2 로딩 후 `bottle` 단일 카테고리 메모리뱅크 구축 및 테스트 샘플 처리 진행을 확인
-- 미검증 범위:
-  - 위 실제 실행은 30초 제한으로 종료되어 최종 메트릭 파일 생성 완료까지는 확인하지 못함
+
+### 로깅 시스템
+- `src/logging_utils.py` 신규 생성 — dual logging (console + file), metadata, summary
+- `main.py` 수정 — 실험 시작 시 자동으로 `logs/{timestamp}/` 디렉토리 생성
+- 각 실험 실행 시 저장되는 파일:
+  - `run.log` — 전체 콘솔 출력 (print + logging 모두 캡처)
+  - `config.yaml` — resolved OmegaConf config
+  - `metadata.json` — git commit, branch, timestamp, python version, command
+  - `metrics_seed={N}.json` — 실험 완료 후 결과 복사 + 요약 테이블 출력
+
+### Baseline 결과 (1-shot, dinov2_vits14_448, agnostic)
+| Metric | Mean |
+|--------|------|
+| Image AUROC | 0.9702 |
+| Image AP | 0.9849 |
+| Image F1 | 0.9621 |
+| Pixel AUROC | 0.9646 |
+| AUPRO | 0.9181 |
+| Pixel F1 | 0.5886 |

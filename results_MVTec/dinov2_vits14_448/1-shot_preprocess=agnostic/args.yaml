@@ -1,9 +1,9 @@
-category: bottle
+category: null
 data_root: /workspace/MVTecAD
 dataset: MVTec
-device: cpu
-eval_clf: false
-eval_segm: false
+device: cuda:0
+eval_clf: true
+eval_segm: true
 faiss_on_cpu: true
 just_seed: null
 k_neighbors: 1
@@ -13,8 +13,8 @@ model_name: dinov2_vits14
 num_seeds: 1
 preprocess: agnostic
 resolution: 448
-save_examples: false
+save_examples: true
 shots:
 - 1
 tag: null
-warmup_iters: 0
+warmup_iters: 25
