@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+
+# Claude Code
+.claude/
+
+# Skill graph / notes (not needed in image)
+skill_graph/
+tasks/
+agents/
+contexts/
+hooks/
+AGENTS.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (mounted via volume)
+data/
+datasets/
+
+# Logs / checkpoints (mounted or generated)
+logs/
+checkpoints/
+outputs/
+wandb/
+
+# OS
+.DS_Store
+Thumbs.db

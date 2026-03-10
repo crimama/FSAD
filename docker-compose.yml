@@ -1,0 +1,29 @@
+services:
+  fsad:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fsad
+    image: fsad:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    volumes:
+      # Project code (live mount)
+      - .:/workspace/FSAD
+      # Data directory (adjust path per server)
+      - ${DATA_PATH:-/data}:/workspace/data
+      # Cache for pretrained models (torch.hub, timm, HF)
+      - ${CACHE_PATH:-~/.cache}:/root/.cache
+    shm_size: "16g"
+    stdin_open: true
+    tty: true
+    working_dir: /workspace/FSAD
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

@@ -1,0 +1,35 @@
+# ============================================================
+# FSAD Research Project — Python Dependencies
+# PyTorch/torchvision은 Docker base image에 포함 (2.5.1+cu121)
+# ============================================================
+
+# --- Config management ---
+omegaconf>=2.3
+hydra-core>=1.3
+
+# --- Image processing ---
+opencv-python-headless>=4.9
+Pillow>=10.0
+
+# --- ML / Statistics ---
+scikit-learn>=1.5            # Ledoit-Wolf, LOF, BayesianGaussianMixture, k-means, metrics
+scipy>=1.13
+
+# --- Foundation models ---
+timm>=1.0                    # ViT variants (DINOv2, etc.)
+
+# --- Visualization ---
+matplotlib>=3.8
+seaborn>=0.13
+
+# --- Experiment tracking ---
+tqdm>=4.66
+tensorboard>=2.16
+
+# --- Metrics ---
+torchmetrics>=1.3
+
+# --- Utilities ---
+einops>=0.8
+pyyaml>=6.0
+pandas>=2.2
