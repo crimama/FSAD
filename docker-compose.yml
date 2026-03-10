@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hun_FSAD
-    image: hun_FSAD:latest
+    image: hun_fsad:latest
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
