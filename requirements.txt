@@ -12,8 +12,11 @@ opencv-python-headless>=4.9
 Pillow>=10.0
 
 # --- ML / Statistics ---
+numpy==1.26                     # AnomalyDINO faiss/scipy compatibility
 scikit-learn>=1.5            # Ledoit-Wolf, LOF, BayesianGaussianMixture, k-means, metrics
 scipy>=1.13
+faiss-cpu>=1.8
+tifffile>=2024.5
 
 # --- Foundation models ---
 timm>=1.0                    # ViT variants (DINOv2, etc.)
