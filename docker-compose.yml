@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fsad
-    image: fsad:latest
+    container_name: hun_im_fsad
+    image: hun_im_fsad:latest
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
