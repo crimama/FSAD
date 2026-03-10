@@ -61,7 +61,7 @@ print(f'NumPy:        {np.__version__}')
 print(f'CUDA:         {torch.version.cuda}')
 print(f'cuDNN:        {torch.backends.cudnn.version()}')
 print(f'GPU:          {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')
-print(f'GPU Memory:   {torch.cuda.get_device_properties(0).total_mem / 1e9:.1f} GB' if torch.cuda.is_available() else '')
+print(f'GPU Memory:   {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB' if torch.cuda.is_available() else '')
 "
 
 # ---------- Done ----------
